@@ -80,7 +80,7 @@ const RegisterPage = () => {
                             "User logged in successfully"
                     );
 
-                    router.push("/");
+                    router.push("/dashboard");
                 } else {
                     toast.error(
                         userResponse?.data.message || "Failed to login"

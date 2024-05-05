@@ -42,7 +42,7 @@ const LoginPage = () => {
                 toast.success(
                     res?.data.message || "User logged in successfully"
                 );
-                router.push("/");
+                router.push("/dashboard");
             } else {
                 setError(res?.message || "User login failed");
             }
