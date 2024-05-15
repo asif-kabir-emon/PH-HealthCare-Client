@@ -21,6 +21,8 @@ export type DrawerItems = {
 };
 
 export type ResponseSuccessType = {
+    success?: boolean;
+    message: string;
     data: any;
     meta?: TMeta;
 };
@@ -30,3 +32,16 @@ export type ResponseErrorType = {
     message: string;
     errorMessages: string;
 };
+
+export type IGenericErrorResponse = {
+    statusCode: number;
+    message: string;
+    errorMessages: IGenericErrorMessage[];
+};
+
+export type IGenericErrorMessage = {
+    path: string | number;
+    message: string;
+};
+
+export const Gender = ["MALE", "FEMALE"];

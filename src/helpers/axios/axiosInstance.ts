@@ -1,6 +1,7 @@
 import { authKey } from "@/constants/authKey";
-import { ResponseErrorType, ResponseSuccessType } from "@/types";
-import { getFromLocalStorage } from "@/utils/localStorage";
+import { generateNewAccessToken } from "@/services/auth.services";
+import { IGenericErrorResponse } from "@/types";
+import { getFromLocalStorage, setToLocalStorage } from "@/utils/localStorage";
 import axios from "axios";
 
 const instance = axios.create();
@@ -12,12 +13,13 @@ instance.interceptors.request.use(
     function (config) {
         const accessToken = getFromLocalStorage(authKey);
         if (accessToken) {
-            config.headers.Authorization = `${accessToken}`;
+            config.headers.Authorization = accessToken;
         }
 
         return config;
     },
     function (error) {
+        console.error(error);
         return Promise.reject(error);
     }
 );
@@ -25,22 +27,27 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
     // @ts-ignore
     function (response) {
-        const responseObj: ResponseSuccessType = {
-            data: response?.data?.data,
-            meta: response?.data?.meta,
-        };
-
-        return responseObj;
+        return response;
     },
-    function (error) {
-        const responseObj: ResponseErrorType = {
-            statusCode: error?.response?.data?.statusCode || 500,
-            message: error?.response?.data?.message || "Internal Server Error",
-            errorMessages:
-                error?.response?.data?.message || "Internal Server Error",
-        };
+    async function (error) {
+        const config = error.config;
+        if (error?.response?.status === 500 && !config.sent) {
+            config.sent = true;
+            const response = await generateNewAccessToken();
+            const accessToken = response?.data?.data?.accessToken;
+            config.headers.Authorization = accessToken;
+            setToLocalStorage(authKey, accessToken);
+            return instance(config);
+        } else {
+            const responseObj: IGenericErrorResponse = {
+                statusCode: error?.response?.data?.statusCode || 500,
+                message:
+                    error?.response?.data?.message || "Something went wrong!!!",
+                errorMessages: error?.response?.data?.message,
+            };
 
-        return responseObj;
+            return responseObj;
+        }
     }
 );
 

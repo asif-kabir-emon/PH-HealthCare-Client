@@ -9,10 +9,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import SideBar from "../SideBar/SideBar";
+import { useGetSingleUserQuery } from "@/redux/api/userApi";
+import { Avatar, Badge, Stack } from "@mui/material";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
+import AccountMenu from "../AccountMenu/AccountMenu";
 
 const drawerWidth = 240;
 
 const DashboardDrawer = ({ children }: { children: React.ReactNode }) => {
+    const { data, isLoading } = useGetSingleUserQuery({});
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
 
@@ -58,23 +63,45 @@ const DashboardDrawer = ({ children }: { children: React.ReactNode }) => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Box>
-                        <Typography
-                            variant="body2"
-                            noWrap
-                            component="div"
-                            color="gray"
-                        >
-                            Hi, Md Asif Kabir Emon
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            noWrap
-                            component="div"
-                            color="primary.main"
-                        >
-                            Welcome To, PH Health Care !
-                        </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            width: "100%",
+                        }}
+                    >
+                        <Box>
+                            <Typography
+                                variant="body2"
+                                noWrap
+                                component="div"
+                                color="gray"
+                            >
+                                Hi,{" "}
+                                {isLoading ? "Loading..." : data?.data?.name}
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                                noWrap
+                                component="div"
+                                color="primary.main"
+                            >
+                                Welcome To, PH Health Care !
+                            </Typography>
+                        </Box>
+                        <Stack direction="row" spacing={2}>
+                            <Badge badgeContent={1} color="primary">
+                                <IconButton sx={{ background: "#ffffff" }}>
+                                    <NotificationsNoneIcon color="action" />
+                                </IconButton>
+                            </Badge>
+                            <Avatar
+                                alt={data?.data?.name}
+                                src={data?.data?.profilePhoto}
+                            />
+                            <AccountMenu />
+                        </Stack>
                     </Box>
                 </Toolbar>
             </AppBar>
