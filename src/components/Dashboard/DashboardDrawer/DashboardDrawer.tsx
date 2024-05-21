@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "../SideBar/SideBar";
 import { useGetSingleUserQuery } from "@/redux/api/userApi";
 import { Avatar, Badge, Stack } from "@mui/material";
@@ -17,9 +17,14 @@ import AccountMenu from "../AccountMenu/AccountMenu";
 const drawerWidth = 240;
 
 const DashboardDrawer = ({ children }: { children: React.ReactNode }) => {
-    const { data, isLoading } = useGetSingleUserQuery({});
+    const { data, isLoading, refetch } = useGetSingleUserQuery({});
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
+
+    useEffect(() => {
+        refetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleDrawerClose = () => {
         setIsClosing(true);

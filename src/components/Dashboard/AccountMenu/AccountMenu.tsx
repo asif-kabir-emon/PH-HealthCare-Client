@@ -10,6 +10,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useRouter } from "next/navigation";
+import { getUserInfo } from "@/services/auth.services";
+import logoutUser from "@/services/actions/logoutUser";
 
 const menuStyles = {
     paper: {
@@ -46,13 +48,18 @@ export default function AccountMenu() {
         setAnchorEl(event.currentTarget);
     };
 
+    const [userRole, setUserRole] = React.useState("");
+    React.useEffect(() => {
+        const { role } = getUserInfo();
+        setUserRole(role);
+    }, []);
+
     const handleClose = () => {
         setAnchorEl(null);
     };
     const handleLogout = () => {
         setAnchorEl(null);
-        localStorage.removeItem("accessToken");
-        router.push("/login");
+        logoutUser(router);
     };
 
     return (
@@ -70,7 +77,7 @@ export default function AccountMenu() {
                         tooltip: {
                             sx: {
                                 bgcolor: "#cdd1da5c",
-                                color: "primary.main", // Change text color if necessary
+                                color: "primary.main",
                             },
                         },
                     }}
@@ -104,7 +111,12 @@ export default function AccountMenu() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                    onClick={() => {
+                        userRole &&
+                            router.push(`/dashboard/${userRole}/profile`);
+                    }}
+                >
                     <Avatar
                         sx={{
                             background: "transparent",
