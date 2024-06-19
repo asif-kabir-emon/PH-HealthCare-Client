@@ -5,8 +5,10 @@ import ScheduleModal from "./components/ScheduleModal";
 import { useGetMyScheduleQuery } from "@/redux/api/doctorScheduleApi";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import dayjs from "dayjs";
 import AddIcon from "@mui/icons-material/Add";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const SchedulePage = () => {
     const [isModelOpen, setIsModelOpen] = useState<boolean>(false);
@@ -17,6 +19,13 @@ const SchedulePage = () => {
     const [limit, setLimit] = useState(5);
     query["page"] = page;
     query["limit"] = limit;
+    query["startDateTime"] = dayjs(new Date())
+        .utc()
+        .hour(0)
+        .minute(0)
+        .second(0)
+        .millisecond(0)
+        .toISOString();
 
     const { data, isLoading } = useGetMyScheduleQuery({ ...query });
     const schedules = data?.data?.data;

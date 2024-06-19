@@ -12,11 +12,11 @@ import {
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 const TopRatedDoctors = async () => {
     const res = await fetch(
-        // "https://ph-health-care-server-seven.vercel.app/api/v1/doctor?page=1&limit=3",
-        "http://localhost:4000/api/v1/doctor?page=1&limit=3",
+        `${process.env.NEXT_PUBLIC_API_URL}/doctor?page=1&limit=3`,
         {
             next: {
                 revalidate: 60,
@@ -114,6 +114,8 @@ const TopRatedDoctors = async () => {
                 <Box textAlign="center">
                     <Button
                         variant="outlined"
+                        component={Link}
+                        href="/doctors"
                         sx={{
                             marginTop: "20px",
                         }}

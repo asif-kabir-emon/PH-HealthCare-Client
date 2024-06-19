@@ -140,7 +140,19 @@ const LoginPage = () => {
                                     textAlign: "right",
                                 }}
                             >
-                                <Link href="/login">Forget Password?</Link>
+                                <Link href="/forget-password">
+                                    <Typography
+                                        sx={{
+                                            cursor: "pointer",
+
+                                            "&:hover": {
+                                                textDecoration: "underline",
+                                            },
+                                        }}
+                                    >
+                                        Forget Password?
+                                    </Typography>
+                                </Link>
                             </Box>
                             <Button
                                 type="submit"

@@ -11,10 +11,15 @@ export type TDoctor = {
     qualification: string;
     currentWorkplace: string;
     designation: string;
-    specialities?: TSpecialties[];
+    doctorSpecialities?: TSpecialties[];
 };
 
 export type TSpecialties = {
     specialityId: string;
-    isDeleted: boolean;
+    doctorId: string;
+    specialities: {
+        id: string;
+        title: string;
+        icon?: string;
+    };
 };

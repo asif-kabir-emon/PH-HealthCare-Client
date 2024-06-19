@@ -21,6 +21,8 @@ export const getUserInfo = () => {
             role: decodedData?.role?.toLowerCase(),
         };
     }
+
+    return null;
 };
 
 export const isLoggedIn = () => {
