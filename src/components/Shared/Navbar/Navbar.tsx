@@ -14,63 +14,107 @@ const Navbar = () => {
     };
 
     return (
-        <Container>
-            <Stack
-                py={2}
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                <Typography
-                    variant="h4"
-                    component={Link}
-                    href="/"
-                    fontWeight={600}
+        <Box
+            sx={{
+                bgcolor: "primary.main",
+            }}
+        >
+            <Container>
+                <Stack
+                    py={2}
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
                 >
-                    P
-                    <Box component="span" color="primary.main">
-                        H
-                    </Box>{" "}
-                    Health Care
-                </Typography>
-                <Stack direction="row" justifyContent="space-between" gap={4}>
-                    <Typography component={Link} href="/consultation">
-                        Consultation
+                    <Typography
+                        variant="h4"
+                        component={Link}
+                        href="/"
+                        fontWeight={600}
+                    >
+                        P
+                        <Box component="span" color="white">
+                            H
+                        </Box>{" "}
+                        Health Care
                     </Typography>
-                    <Typography component={Link} href="/login">
-                        Health Plans
-                    </Typography>
-                    <Typography component={Link} href="/login">
-                        Medicine
-                    </Typography>
-                    <Typography component={Link} href="/login">
-                        Diagnostics
-                    </Typography>
-                    <Typography component={Link} href="/login">
-                        NGOs
-                    </Typography>
-                    {userInfo && userInfo.id && (
-                        <Typography component={Link} href="/dashboard">
-                            Dashboard
+                    <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        gap={4}
+                        color={"white"}
+                    >
+                        <Typography
+                            component={Link}
+                            href="/consultation"
+                            color="white"
+                        >
+                            Consultation
                         </Typography>
+                        <Typography
+                            component={Link}
+                            href="/login"
+                            color="white"
+                        >
+                            Health Plans
+                        </Typography>
+                        <Typography
+                            component={Link}
+                            href="/login"
+                            color="white"
+                        >
+                            Medicine
+                        </Typography>
+                        <Typography
+                            component={Link}
+                            href="/login"
+                            color="white"
+                        >
+                            Diagnostics
+                        </Typography>
+                        <Typography
+                            component={Link}
+                            href="/login"
+                            color="white"
+                        >
+                            NGOs
+                        </Typography>
+                        {userInfo && userInfo.id && (
+                            <Typography
+                                component={Link}
+                                href="/dashboard"
+                                color="white"
+                            >
+                                Dashboard
+                            </Typography>
+                        )}
+                    </Stack>
+                    {userInfo && userInfo.id ? (
+                        <Button
+                            onClick={() => {
+                                handleLogout();
+                            }}
+                            color="error"
+                            sx={{
+                                boxShadow: "none",
+                            }}
+                        >
+                            Logout
+                        </Button>
+                    ) : (
+                        <Button
+                            component={Link}
+                            href="/login"
+                            sx={{
+                                boxShadow: "none",
+                            }}
+                        >
+                            Login
+                        </Button>
                     )}
                 </Stack>
-                {userInfo && userInfo.id ? (
-                    <Button
-                        onClick={() => {
-                            handleLogout();
-                        }}
-                        color="error"
-                    >
-                        Logout
-                    </Button>
-                ) : (
-                    <Button component={Link} href="/login">
-                        Login
-                    </Button>
-                )}
-            </Stack>
-        </Container>
+            </Container>
+        </Box>
     );
 };
 

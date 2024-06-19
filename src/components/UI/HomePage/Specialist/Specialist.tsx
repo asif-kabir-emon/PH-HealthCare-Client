@@ -1,5 +1,6 @@
 import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
+import Link from "next/link";
 
 const Specialist = async () => {
     const res = await fetch(
@@ -56,6 +57,8 @@ const Specialist = async () => {
                                     padding: "40px 10px",
                                 },
                             }}
+                            component={Link}
+                            href={`/doctors?specialty=${speciality.title}`}
                         >
                             <Image
                                 src={speciality.icon}

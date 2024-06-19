@@ -1,17 +1,22 @@
 "use client";
 import { getTimeIn12HourFormat } from "@/app/(withDashboardLayout)/dashboard/doctor/schedule/components/MultipleSelectFieldChip";
+import { useCreateAppointmentMutation } from "@/redux/api/appointmentApi";
 import { useGetAllDoctorSchedulesQuery } from "@/redux/api/doctorScheduleApi";
+import { useInitialPaymentMutation } from "@/redux/api/paymentApi";
 import { DoctorSchedule } from "@/types";
 import dateFormatter from "@/utils/dateFormatter";
 
 import { Box, Button, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 dayjs.extend(utc);
 
 const DoctorScheduleSlots = ({ id }: { id: string }) => {
     const [scheduleId, setScheduleId] = useState("");
+    const router = useRouter();
 
     const query: Record<string, any> = {};
 
@@ -71,7 +76,42 @@ const DoctorScheduleSlots = ({ id }: { id: string }) => {
                     .toISOString()
     );
 
-    const handleBookAppointment = async () => {};
+    const [createAppointment] = useCreateAppointmentMutation();
+    const [initialPayment] = useInitialPaymentMutation();
+
+    const handleBookAppointment = async () => {
+        try {
+            if (id && scheduleId) {
+                const res = await createAppointment({
+                    doctorId: id,
+                    scheduleId: scheduleId,
+                }).unwrap();
+                console.log(res);
+
+                if (res?.success) {
+                    toast.success("Appointment Booked Successfully!");
+                    const response = await initialPayment(
+                        res?.data?.id
+                    ).unwrap();
+                    console.log(response);
+
+                    if (response?.success && response?.data?.paymentUrl) {
+                        router.push(response?.data?.paymentUrl);
+                    } else {
+                        throw new Error(
+                            response?.message || "Failed to Initiate Payment!"
+                        );
+                    }
+                } else {
+                    throw new Error(
+                        res?.message || "Failed to Book Appointment!"
+                    );
+                }
+            }
+        } catch (error: any) {
+            toast.error(error.message || "Failed to Book Appointment!");
+        }
+    };
 
     return (
         <Box mb={5}>
@@ -192,7 +232,7 @@ const DoctorScheduleSlots = ({ id }: { id: string }) => {
                         )
                     ) : (
                         <span style={{ color: "red" }}>
-                            No Schedule is Available Today!
+                            No Schedule is Available Tomorrow!
                         </span>
                     )}
                 </Stack>

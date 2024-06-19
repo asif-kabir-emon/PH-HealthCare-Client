@@ -61,11 +61,19 @@ const TopRatedDoctors = async () => {
                                     image={doctor.profilePhoto}
                                     title="green iguana"
                                 /> */}
-                                <Box>
+                                <Box
+                                    sx={{
+                                        position: "relative",
+                                        width: "100%",
+                                        height: 200,
+                                        overflow: "hidden",
+                                    }}
+                                >
                                     <Image
                                         src={doctor.profilePhoto}
                                         width={500}
                                         height={200}
+                                        objectFit="cover"
                                         alt="Doctor"
                                     />
                                 </Box>
